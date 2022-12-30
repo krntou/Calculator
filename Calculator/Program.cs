@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.Metrics;
 using System.Globalization;
 
 
@@ -15,12 +16,15 @@ namespace Calculator
             {
                 case "a":
                     result = num1 + num2;
+                    OperationHistory += $"{num1} + {num2} = {result}\n";
                     break;
                 case "s":
                     result = num1 - num2;
+                    OperationHistory += $"{num1} - {num2} = {result}\n";
                     break;
                 case "m":
                     result = num1 * num2;
+                    OperationHistory += $"{num1} x {num2} = {result}\n";
                     break;
                 case "d":
                     // Ask the user to enter a non-zero divisor.
@@ -28,6 +32,7 @@ namespace Calculator
                     {
                         result = num1 / num2;
                     }
+                    OperationHistory += $"{num1} / {num2} = {result}\n";
                     break;
                 // Return text for an incorrect option entry.
                 default:
@@ -35,6 +40,8 @@ namespace Calculator
             }
             return result;
         }
+
+        public static string OperationHistory = "";
     }
 
     class Program
@@ -103,7 +110,15 @@ namespace Calculator
 
                 // Wait for the user to respond before closing.
                 timesUsed += 1;
-                Console.WriteLine($"Calculations performed: {timesUsed}");
+                Console.WriteLine("Operation log:");
+                Console.WriteLine(Calculator.OperationHistory);
+                Console.WriteLine($"Number of calculations performed: {timesUsed}");
+                Console.Write("Type 'delete' to reset the operation log, or press any other key to keep it: ");
+                if (Console.ReadLine() == "delete")
+                {
+                    Calculator.OperationHistory = "";
+                    Console.WriteLine("Operation log cleared.");
+                }
                 Console.Write("Press 'n' and Enter to close the app, or press any other key and Enter to continue: ");
                 if (Console.ReadLine() == "n") endApp = true;
 
