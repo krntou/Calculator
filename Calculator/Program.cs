@@ -45,7 +45,7 @@ namespace Calculator
             // Display title as the C# console calculator app.
             Console.WriteLine("Console Calculator in C#\r");
             Console.WriteLine("------------------------\n");
-
+            int timesUsed = 0; // Init var to keep track of times used
             while (!endApp)
             {
                 // Declare variables and set to empty.
@@ -102,6 +102,8 @@ namespace Calculator
                 Console.WriteLine("------------------------\n");
 
                 // Wait for the user to respond before closing.
+                timesUsed += 1;
+                Console.WriteLine($"Calculations performed: {timesUsed}");
                 Console.Write("Press 'n' and Enter to close the app, or press any other key and Enter to continue: ");
                 if (Console.ReadLine() == "n") endApp = true;
 
