@@ -23,11 +23,13 @@ namespace Calculator
                     result = num1 * num2;
                     break;
                 case "d":
+                    // Ask the user to enter a non-zero divisor.
                     if (num2 != 0)
                     {
                         result = num1 / num2;
                     }
                     break;
+                // Return text for an incorrect option entry.
                 default:
                     break;
             }
@@ -46,7 +48,6 @@ namespace Calculator
 
             while (!endApp)
             {
-                Thread.CurrentThread.CurrentCulture = new CultureInfo("en-GB");
                 // Declare variables and set to empty.
                 string numInput1 = "";
                 string numInput2 = "";
@@ -57,7 +58,7 @@ namespace Calculator
                 numInput1 = Console.ReadLine();
 
                 double cleanNum1 = 0;
-                while (!double.TryParse(numInput1, out cleanNum1));
+                while (!double.TryParse(numInput1, out cleanNum1))
                 {
                     Console.Write("This is not valid input. Please enter an integer value: ");
                     numInput1 = Console.ReadLine();
@@ -68,7 +69,7 @@ namespace Calculator
                 numInput2 = Console.ReadLine();
 
                 double cleanNum2 = 0;
-                while (!double.TryParse(numInput2, out cleanNum2));
+                while (!double.TryParse(numInput2, out cleanNum2))
                 {
                     Console.Write("This is not valid input. Please enter an integer value: ");
                     numInput2 = Console.ReadLine();
@@ -95,13 +96,13 @@ namespace Calculator
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine("Oh no! An exception occured trying to do the math.\n - Details: " + e.Message);
+                    Console.WriteLine("Oh no! An exception occurred trying to do the math.\n - Details: " + e.Message);
                 }
 
                 Console.WriteLine("------------------------\n");
 
                 // Wait for the user to respond before closing.
-                Console.Write("Press 'n' and Enter to close the app, or press any other key and enter to continue: ");
+                Console.Write("Press 'n' and Enter to close the app, or press any other key and Enter to continue: ");
                 if (Console.ReadLine() == "n") endApp = true;
 
                 Console.WriteLine("\n"); // Friendly linespacing.
