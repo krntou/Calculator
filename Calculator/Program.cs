@@ -10,21 +10,24 @@ namespace Calculator
         public static double DoOperation(double num1, double num2, string op)
         {
             double result = double.NaN; // Default value is "not-a-number" if an operation, such as division, could result in an error.
-
+            string newLogEntry;
             // Use a switch statement to do the math.
             switch (op)
             {
                 case "a":
                     result = num1 + num2;
-                    OperationHistory += $"{num1} + {num2} = {result}\n";
+                    newLogEntry = $"{num1} + {num2} = {result}\n";
+                    OperationHistory.Add(newLogEntry);
                     break;
                 case "s":
                     result = num1 - num2;
-                    OperationHistory += $"{num1} - {num2} = {result}\n";
+                    newLogEntry = $"{num1} - {num2} = {result}\n";
+                    OperationHistory.Add(newLogEntry);
                     break;
                 case "m":
                     result = num1 * num2;
-                    OperationHistory += $"{num1} x {num2} = {result}\n";
+                    newLogEntry = $"{num1} x {num2} = {result}\n";
+                    OperationHistory.Add(newLogEntry);
                     break;
                 case "d":
                     // Ask the user to enter a non-zero divisor.
@@ -32,7 +35,8 @@ namespace Calculator
                     {
                         result = num1 / num2;
                     }
-                    OperationHistory += $"{num1} / {num2} = {result}\n";
+                    newLogEntry = $"{num1} / {num2} = {result}\n";
+                    OperationHistory.Add(newLogEntry);
                     break;
                 // Return text for an incorrect option entry.
                 default:
@@ -41,7 +45,12 @@ namespace Calculator
             return result;
         }
 
-        public static string OperationHistory = "";
+        public static List<String> OperationHistory { get; private set; } = new List<string>();
+
+        public static void ClearHistory()
+        {
+            OperationHistory.Clear();
+        }
     }
 
     class Program
@@ -111,12 +120,15 @@ namespace Calculator
                 // Wait for the user to respond before closing.
                 timesUsed += 1;
                 Console.WriteLine("Operation log:");
-                Console.WriteLine(Calculator.OperationHistory);
+                foreach (var entry in Calculator.OperationHistory)
+                {
+                    Console.WriteLine(entry);
+                }
                 Console.WriteLine($"Number of calculations performed: {timesUsed}");
                 Console.Write("Type 'delete' to reset the operation log, or press any other key to keep it: ");
                 if (Console.ReadLine() == "delete")
                 {
-                    Calculator.OperationHistory = "";
+                    Calculator.ClearHistory();
                     Console.WriteLine("Operation log cleared.");
                 }
                 Console.Write("Press 'n' and Enter to close the app, or press any other key and Enter to continue: ");
