@@ -66,18 +66,59 @@ namespace Calculator
             {
                 // Declare variables and set to empty.
                 string numInput1 = "";
+                double cleanNum1 = 0;
                 string numInput2 = "";
                 double result = 0;
 
-                // Ask the user to type the first number.
-                Console.Write("Type a number, and then press Enter: ");
-                numInput1 = Console.ReadLine();
-
-                double cleanNum1 = 0;
-                while (!double.TryParse(numInput1, out cleanNum1))
+                // Ask the user if they want to use a previous result as the first number.
+                if (Calculator.OperationHistory.Count > 0)
                 {
-                    Console.Write("This is not valid input. Please enter an integer value: ");
+                    Console.Write("Press 'y' to use a previous result as the first number, or else press any key to type a new number: ");
+                    if (Console.ReadLine() == "y")
+                    {
+                        List<Double> pastResults = new List<Double>();
+                        int countLoop = 1;
+                        foreach (var entry in Calculator.OperationHistory)
+                        {
+                            String[] splitEntry = entry.Split(" ");
+                            string pastResult = splitEntry.ElementAt(splitEntry.Count() - 1);
+                            Console.WriteLine($"{countLoop}: {pastResult}");
+                            double pastResultDBL = double.Parse(pastResult);
+                            pastResults.Add(pastResultDBL);
+                            countLoop++;
+                        }
+                        Console.Write("Choose a result to use as the first number (type the number before the colon): ");
+                        int chosenIndex = Convert.ToInt32(Console.ReadLine());
+                        cleanNum1 = pastResults.ElementAt(chosenIndex - 1);
+                        Console.WriteLine($"The first number set to: {cleanNum1}");
+
+                    }
+                    else
+                    {
+                        // Ask the user to type the first number.
+                        Console.Write("Type a number, and then press Enter: ");
+                        numInput1 = Console.ReadLine();
+
+                        cleanNum1 = 0;
+                        while (!double.TryParse(numInput1, out cleanNum1))
+                        {
+                            Console.Write("This is not valid input. Please enter an integer value: ");
+                            numInput1 = Console.ReadLine();
+                        }
+                    }
+                }
+                else
+                {
+                    // Ask the user to type the first number.
+                    Console.Write("Type a number, and then press Enter: ");
                     numInput1 = Console.ReadLine();
+
+                    cleanNum1 = 0;
+                    while (!double.TryParse(numInput1, out cleanNum1))
+                    {
+                        Console.Write("This is not valid input. Please enter an integer value: ");
+                        numInput1 = Console.ReadLine();
+                    }
                 }
 
                 // Ask the user to type the second number.
