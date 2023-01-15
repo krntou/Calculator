@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics.Metrics;
 using System.Globalization;
-
+//if you ever come to look at this again, you need to check if the fix the use previous results feature so it works on single ops too works
 
 namespace Calculator
 {
@@ -108,13 +108,15 @@ namespace Calculator
                 double cleanNum1 = 0;
                 string numInput2 = "";
                 double result = 0;
-                
+                bool usePrevResult = false;
+
                 // Ask the user if they want to use a previous result as the first number.
                 if (Calculator.OperationHistory.Count > 0)
                 {
                     Console.Write("Press 'y' to use a previous result as the first number, or else press any key to type a new number: ");
                     if (Console.ReadLine() == "y")
                     {
+                        usePrevResult = true;
                         List<Double> pastResults = new List<Double>();
                         int countLoop = 1;
                         foreach (var entry in Calculator.OperationHistory)
@@ -134,6 +136,7 @@ namespace Calculator
                     }
                     else // fix this else so that asking for the first number is not repeated
                     {
+                        usePrevResult = false;
                         // Ask the user to type the first number.
                         Console.Write("Type a number, and then press Enter: ");
                         numInput1 = Console.ReadLine();
@@ -157,28 +160,47 @@ namespace Calculator
                 {
                     Console.WriteLine("Choose an operation from the above list: ");
                     string op = Console.ReadLine();
-                    // Ask the user to type the first number.
-                    Console.Write("Type a number to perform the operation on, and then press Enter: ");
-                    numInput1 = Console.ReadLine();
-
-                    cleanNum1 = 0;
-                    while (!double.TryParse(numInput1, out cleanNum1))
+                    if (usePrevResult == true)
                     {
-                        Console.Write("This is not valid input. Please enter an integer value: ");
-                        numInput1 = Console.ReadLine();
-                    }
-                    try
-                    {
-                        result = Calculator.DoOperationSingle(cleanNum1, op);
-                        if (double.IsNaN(result))
+                        try
                         {
-                            Console.WriteLine("This operation will result in a mathematical error.\n");
+                            result = Calculator.DoOperationSingle(cleanNum1, op);
+                            if (double.IsNaN(result))
+                            {
+                                Console.WriteLine("This operation will result in a mathematical error.\n");
+                            }
+                            else Console.WriteLine("Your result: {0:0.##}\n", result);
                         }
-                        else Console.WriteLine("Your result: {0:0.##}\n", result);
+                        catch (Exception e)
+                        {
+                            Console.WriteLine("Oh no! An exception occurred trying to do the math.\n - Details: " + e.Message);
+                        }
                     }
-                    catch (Exception e)
+                    else
                     {
-                        Console.WriteLine("Oh no! An exception occurred trying to do the math.\n - Details: " + e.Message);
+                        // Ask the user to type the first number.
+                        Console.Write("Type a number to perform the operation on, and then press Enter: ");
+                        numInput1 = Console.ReadLine();
+
+                        cleanNum1 = 0;
+                        while (!double.TryParse(numInput1, out cleanNum1))
+                        {
+                            Console.Write("This is not valid input. Please enter an integer value: ");
+                            numInput1 = Console.ReadLine();
+                        }
+                        try
+                        {
+                            result = Calculator.DoOperationSingle(cleanNum1, op);
+                            if (double.IsNaN(result))
+                            {
+                                Console.WriteLine("This operation will result in a mathematical error.\n");
+                            }
+                            else Console.WriteLine("Your result: {0:0.##}\n", result);
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine("Oh no! An exception occurred trying to do the math.\n - Details: " + e.Message);
+                        }
                     }
                 }
                 else
