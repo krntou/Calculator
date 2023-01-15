@@ -38,8 +38,47 @@ namespace Calculator
                     newLogEntry = $"{num1} / {num2} = {result}\n";
                     OperationHistory.Add(newLogEntry);
                     break;
+                case "p":
+                    result = Math.Pow(num1, num2);
+                    newLogEntry = $"{num1} ^ {num2} = {result}\n";
+                    OperationHistory.Add(newLogEntry);
+                    break;
                 // Return text for an incorrect option entry.
                 default:
+                    break;
+            }
+            return result;
+        }
+        public static double DoOperationSingle(double num1, string op)
+        {
+            double result = double.NaN;
+            string newLogEntry;
+            switch (op)
+            {
+                case "r":
+                    result = Math.Sqrt(num1);
+                    newLogEntry = $"Root of {num1} = {result}\n";
+                    OperationHistory.Add(newLogEntry);
+                    break;
+                case "mt":
+                    result = num1 * 10;
+                    newLogEntry = $"{num1} * 10 = {result}";
+                    OperationHistory.Add(newLogEntry);
+                    break;
+                case "sin":
+                    result = Math.Sin(num1);
+                    newLogEntry = $"sin {num1} = {result}";
+                    OperationHistory.Add(newLogEntry);
+                    break;
+                case "cos":
+                    result = Math.Cos(num1);
+                    newLogEntry = $"cos {num1} = {result}";
+                    OperationHistory.Add(newLogEntry);
+                    break;
+                case "tan":
+                    result = Math.Tan(num1);
+                    newLogEntry = $"tan {num1} = {result}";
+                    OperationHistory.Add(newLogEntry);
                     break;
             }
             return result;
@@ -69,7 +108,7 @@ namespace Calculator
                 double cleanNum1 = 0;
                 string numInput2 = "";
                 double result = 0;
-
+                
                 // Ask the user if they want to use a previous result as the first number.
                 if (Calculator.OperationHistory.Count > 0)
                 {
@@ -93,7 +132,7 @@ namespace Calculator
                         Console.WriteLine($"The first number set to: {cleanNum1}");
 
                     }
-                    else
+                    else // fix this else so that asking for the first number is not repeated
                     {
                         // Ask the user to type the first number.
                         Console.Write("Type a number, and then press Enter: ");
@@ -105,6 +144,41 @@ namespace Calculator
                             Console.Write("This is not valid input. Please enter an integer value: ");
                             numInput1 = Console.ReadLine();
                         }
+                    }
+                }
+                // Ask the user if they want to perform an operation with one number 
+                Console.WriteLine("\tr - Square root of");
+                Console.WriteLine("\tmt - Multiply by 10");
+                Console.WriteLine("\tsin - Sin");
+                Console.WriteLine("\tcos - Cos");
+                Console.WriteLine("\ttan - Tan");
+                Console.WriteLine("Press 'y' to perform any of the single number operations above.");
+                if (Console.ReadLine() == "y")
+                {
+                    Console.WriteLine("Choose an operation from the above list: ");
+                    string op = Console.ReadLine();
+                    // Ask the user to type the first number.
+                    Console.Write("Type a number to perform the operation on, and then press Enter: ");
+                    numInput1 = Console.ReadLine();
+
+                    cleanNum1 = 0;
+                    while (!double.TryParse(numInput1, out cleanNum1))
+                    {
+                        Console.Write("This is not valid input. Please enter an integer value: ");
+                        numInput1 = Console.ReadLine();
+                    }
+                    try
+                    {
+                        result = Calculator.DoOperationSingle(cleanNum1, op);
+                        if (double.IsNaN(result))
+                        {
+                            Console.WriteLine("This operation will result in a mathematical error.\n");
+                        }
+                        else Console.WriteLine("Your result: {0:0.##}\n", result);
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine("Oh no! An exception occurred trying to do the math.\n - Details: " + e.Message);
                     }
                 }
                 else
@@ -119,45 +193,45 @@ namespace Calculator
                         Console.Write("This is not valid input. Please enter an integer value: ");
                         numInput1 = Console.ReadLine();
                     }
-                }
 
-                // Ask the user to type the second number.
-                Console.Write("Type another number, and then press Enter: ");
-                numInput2 = Console.ReadLine();
 
-                double cleanNum2 = 0;
-                while (!double.TryParse(numInput2, out cleanNum2))
-                {
-                    Console.Write("This is not valid input. Please enter an integer value: ");
+                    // Ask the user to type the second number.
+                    Console.Write("Type another number, and then press Enter: ");
                     numInput2 = Console.ReadLine();
-                }
 
-                // Ask the user to choose an operator.
-                Console.WriteLine("Choose an operator from the following list:");
-                Console.WriteLine("\ta - Add");
-                Console.WriteLine("\ts - Subtract");
-                Console.WriteLine("\tm - Multiply");
-                Console.WriteLine("\td - Divide");
-                Console.Write("Your option? ");
-
-                string op = Console.ReadLine();
-
-                try
-                {
-                    result = Calculator.DoOperation(cleanNum1, cleanNum2, op);
-                    if (double.IsNaN(result))
+                    double cleanNum2 = 0;
+                    while (!double.TryParse(numInput2, out cleanNum2))
                     {
-                        Console.WriteLine("This operation will result in a mathematical error.\n");
+                        Console.Write("This is not valid input. Please enter an integer value: ");
+                        numInput2 = Console.ReadLine();
                     }
-                    else Console.WriteLine("Your result: {0:0.##}\n", result);
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine("Oh no! An exception occurred trying to do the math.\n - Details: " + e.Message);
-                }
 
+                    // Ask the user to choose an operator.
+                    Console.WriteLine("Choose an operator from the following list:");
+                    Console.WriteLine("\ta - Add");
+                    Console.WriteLine("\ts - Subtract");
+                    Console.WriteLine("\tm - Multiply");
+                    Console.WriteLine("\td - Divide");
+                    Console.WriteLine("\tp - Power of");
+                    Console.Write("Your option? ");
+
+                    string op = Console.ReadLine();
+
+                    try
+                    {
+                        result = Calculator.DoOperation(cleanNum1, cleanNum2, op);
+                        if (double.IsNaN(result))
+                        {
+                            Console.WriteLine("This operation will result in a mathematical error.\n");
+                        }
+                        else Console.WriteLine("Your result: {0:0.##}\n", result);
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine("Oh no! An exception occurred trying to do the math.\n - Details: " + e.Message);
+                    }   
+                }
                 Console.WriteLine("------------------------\n");
-
                 // Wait for the user to respond before closing.
                 timesUsed += 1;
                 Console.WriteLine("Operation log:");
